@@ -1,0 +1,61 @@
+<div class="upload-container">
+    <!-- <button class="upload-btn1" (click)="addText('hi')">addText</button> -->
+    <input type="text" [(ngModel)]="searchText" placeholder="Search...">
+    <div class="drop-zone" [class.dragging]="isDragging" (dragover)="onDragOver($event)"
+        (dragleave)="onDragLeave($event)" (drop)="onDrop($event)" (click)="triggerFileInput()">
+        <div *ngIf="!selectedFile">
+            <div class="icon">📄</div>
+            <h3>Drag & Drop your PDF here</h3>
+            <p>or click to browse</p>
+            <input #fileInput type="file" accept="application/pdf" (change)="onFileSelected($event)" hidden />
+        </div>
+
+        <div *ngIf="selectedFile" class="file-info-container" (click)="$event.stopPropagation()">
+            <div class="file-info">
+                <div class="file-icon">✅</div>
+                <div class="file-details">
+                    <span class="file-name">{{ selectedFile.name }}</span>
+                    <span class="file-size">{{ (selectedFile.size / 1024 / 1024) | number:'1.2-2' }} MB</span>
+                </div>
+                <button class="remove-btn" (click)="removeFile()" [disabled]="isUploading">✕</button>
+            </div>
+            <button class="upload-btn" (click)="uploadFile()" [disabled]="isUploading"
+                *ngIf="!uploadStatus || statusClass === 'error' || uploadStatus === 'Uploading...'">
+                {{ isUploading ? 'Uploading...' : 'Upload PDF' }}
+            </button>
+
+            <button class="upload-btn scan-btn" (click)="scanFile()" [disabled]="isScanning"
+                *ngIf="statusClass === 'success'">
+                {{ isScanning ? 'Scanning...' : 'Scan PDF' }}
+            </button>
+        </div>
+    </div>
+
+    <div *ngIf="error" class="error-message">
+        ⚠️ {{ error }}
+    </div>
+
+    <div *ngIf="uploadStatus" class="status-message" [ngClass]="statusClass">
+        <span *ngIf="statusClass === 'success'">🎉</span>
+        <span *ngIf="statusClass === 'error'">⚠️</span>
+        {{ uploadStatus }}
+    </div>
+    <div style="border:2px solid red; padding:8px">
+        DEBUG<br>
+        showText: {{ showText }}<br>
+        scanText length: {{ scanText?.length }}
+    </div>
+    <div *ngIf="scanText" class="scan-result-container">
+        <h4>Scanned Text:</h4>
+        <pre>{{ scanText }}</pre>
+    </div>
+    <div *ngIf="scanResult" class="status-message" [ngClass]="scanText ? 'success' : 'error'">
+        {{ scanResult }}
+    </div>
+    <div *ngIf="showText" class="scan-result-container">
+        <h4>Scanned Text:</h4>
+        <pre *ngIf="showText">{{ scanText }}</pre>
+    </div>
+    {{asas}}
+
+</div>
